@@ -52,14 +52,6 @@ class ModbusDataCollector2000Delux:
 
         data = {}
 
-        MPPT1Voltage = registers.InverterEquipmentRegister.PV1Voltage
-        MPPT1Current = registers.InverterEquipmentRegister.PV1Current
-        MPPT1Power = MPPT1Voltage * MPPT1Current
-
-        MPPT2Voltage = registers.InverterEquipmentRegister.PV3Voltage
-        MPPT2Current = registers.InverterEquipmentRegister.PV3Current
-        MPPT2Power = MPPT2Voltage * MPPT2Current
-
         dbuspath = {
             '/Ac/Power': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.ActivePower},
             '/Ac/L1/Current': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseACurrent},
@@ -68,12 +60,6 @@ class ModbusDataCollector2000Delux:
             '/Ac/L2/Voltage': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseBVoltage},
             '/Ac/L3/Current': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseCCurrent},
             '/Ac/L3/Voltage': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseCVoltage},
-            '/Dc/Mppt/1/Voltage': {'initial': 0, "sun2000": MPPT1Voltage},
-            '/Dc/Mppt/1/Current': {'initial': 0, "sun2000": MPPT1Current},
-            '/Dc/Mppt/1/Power': {'initial': 0, "sun2000": MPPT1Power},
-            '/Dc/Mppt/2/Voltage': {'initial': 0, "sun2000": MPPT2Voltage},
-            '/Dc/Mppt/2/Current': {'initial': 0, "sun2000": MPPT2Current},
-            '/Dc/Mppt/2/Power': {'initial': 0, "sun2000": MPPT2Power},
             '/Dc/Power': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.InputPower},
             '/Ac/MaxPower': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.MaximumActivePower},
             '/Ac/Efficiency': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.Efficiency},
@@ -92,6 +78,20 @@ class ModbusDataCollector2000Delux:
         data['/Status'] = state1_string
 
         # data['/Ac/StatusCode'] = statuscode
+
+        MPPT1Voltage = self.invSun2000.read(registers.InverterEquipmentRegister.PV1Voltage)
+        MPPT1Current = self.invSun2000.read(registers.InverterEquipmentRegister.PV1Current)
+        MPPT1Power = MPPT1Voltage * MPPT1Current
+        data['/Dc/Mppt/1/Voltage'] = MPPT1Voltage
+        data['/Dc/Mppt/1/Current'] = MPPT1Current
+        data['/Dc/Mppt/1/Power'] = MPPT1Power
+
+        MPPT2Voltage = self.invSun2000.read(registers.InverterEquipmentRegister.PV3Voltage)
+        MPPT2Current = self.invSun2000.read(registers.InverterEquipmentRegister.PV3Current)
+        MPPT2Power = MPPT2Voltage * MPPT2Current
+        data['/Dc/Mppt/2/Voltage'] = MPPT2Voltage
+        data['/Dc/Mppt/2/Current'] = MPPT2Current
+        data['/Dc/Mppt/2/Power'] = MPPT2Power
 
         energy_forward = self.invSun2000.read(registers.InverterEquipmentRegister.AccumulatedEnergyYield)
         energy_daily_forward = self.invSun2000.read(registers.InverterEquipmentRegister.DailyEnergyYield)
