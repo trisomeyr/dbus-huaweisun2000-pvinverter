@@ -149,6 +149,10 @@ def main():
         _a = lambda p, v: (str(round(v, 1)) + ' A')
         _w = lambda p, v: (str(round(v, 1)) + ' W')
         _v = lambda p, v: (str(round(v, 1)) + ' V')
+        _o = lambda p, v: (str(round(v, 1)) + ' mOhm')
+        _p = lambda p, v: (str(round(v, 1)) + ' %')
+        _var = lambda p, v: (str(round(v, 1)) + ' kvar')
+        _c = lambda p, v: (str(round(v, 1)) + ' °C')
         _hz = lambda p, v: f"{v:.4f}Hz"
         _n = lambda p, v: f"{v:i}"
 
@@ -158,12 +162,19 @@ def main():
             '/Ac/Current': {'initial': 0, 'textformat': _a},
             '/Ac/Voltage': {'initial': 0, 'textformat': _v},
             '/Ac/Energy/Forward': {'initial': None, 'textformat': _kwh},
+            '/Ac/Energy/DailyForward': {'initial': None, 'textformat': _kwh},
             #
             '/Ac/L1/Power': {'initial': 0, 'textformat': _w},
+            '/Ac/L1/CosPhi': {'initial': 0, 'textformat': _n},
             '/Ac/L1/Current': {'initial': 0, 'textformat': _a},
             '/Ac/L1/Voltage': {'initial': 0, 'textformat': _v},
             '/Ac/L1/Frequency': {'initial': None, 'textformat': _hz},
             '/Ac/L1/Energy/Forward': {'initial': None, 'textformat': _kwh},
+            '/Ac/Efficiency': {'initial': 0, 'textformat': _p},
+            '/Ac/PeakActivePowerOfCurrentDay': {'initial': 0, 'textformat': _w},
+            '/Ac/ReactivePower': {'initial': 0, 'textformat': _var},
+            '/Temperature': {'initial': 0, 'textformat': _c},
+            '/InsulationResistance': {'initial': 0, 'textformat': _o},
             #
             '/Ac/MaxPower': {'initial': 20000, 'textformat': _w},
             '/Ac/StatusCode': {'initial': 0, 'textformat': _n},
@@ -178,6 +189,12 @@ def main():
             '/Ac/L3/Frequency': {'initial': None, 'textformat': _hz},
             '/Ac/L3/Energy/Forward': {'initial': None, 'textformat': _kwh},
             '/Dc/Power': {'initial': 0, 'textformat': _w},
+            '/Dc/Mppt/1/Voltage': {'initial': 0, 'textformat': _v},
+            '/Dc/Mppt/1/Current': {'initial': 0, 'textformat': _a},
+            '/Dc/Mppt/1/Power': {'initial': 0, 'textformat': _w},
+            '/Dc/Mppt/2/Voltage': {'initial': 0, 'textformat': _v},
+            '/Dc/Mppt/2/Current': {'initial': 0, 'textformat': _a},
+            '/Dc/Mppt/2/Power': {'initial': 0, 'textformat': _w},
             '/Status': {'initial': ""},
         }
 

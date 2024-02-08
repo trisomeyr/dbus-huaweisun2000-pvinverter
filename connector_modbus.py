@@ -52,6 +52,14 @@ class ModbusDataCollector2000Delux:
 
         data = {}
 
+        MPPT1Voltage = registers.InverterEquipmentRegister.PV1Voltage
+        MPPT1Current = registers.InverterEquipmentRegister.PV1Current
+        MPPT1Power = MPPT1Voltage * MPPT1Current
+
+        MPPT2Voltage = registers.InverterEquipmentRegister.PV3Voltage
+        MPPT2Current = registers.InverterEquipmentRegister.PV3Current
+        MPPT2Power = MPPT2Voltage * MPPT2Current
+
         dbuspath = {
             '/Ac/Power': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.ActivePower},
             '/Ac/L1/Current': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseACurrent},
@@ -60,8 +68,19 @@ class ModbusDataCollector2000Delux:
             '/Ac/L2/Voltage': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseBVoltage},
             '/Ac/L3/Current': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseCCurrent},
             '/Ac/L3/Voltage': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PhaseCVoltage},
+            '/Dc/Mppt/1/Voltage': {'initial': 0, "sun2000": MPPT1Voltage},
+            '/Dc/Mppt/1/Current': {'initial': 0, "sun2000": MPPT1Current},
+            '/Dc/Mppt/1/Power': {'initial': 0, "sun2000": MPPT1Power},
+            '/Dc/Mppt/2/Voltage': {'initial': 0, "sun2000": MPPT2Voltage},
+            '/Dc/Mppt/2/Current': {'initial': 0, "sun2000": MPPT2Current},
+            '/Dc/Mppt/2/Power': {'initial': 0, "sun2000": MPPT2Power},
             '/Dc/Power': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.InputPower},
             '/Ac/MaxPower': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.MaximumActivePower},
+            '/Ac/Efficiency': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.Efficiency},
+            '/Ac/PeakActivePowerOfCurrentDay': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.PeakActivePowerOfCurrentDay},
+            '/Ac/ReactivePower': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.ReactivePower},
+            '/Temperature': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.InternalTemperature},
+            '/InsulationResistance': {'initial': 0, "sun2000": registers.InverterEquipmentRegister.InsulationResistance}
         }
 
         for k, v in dbuspath.items():
@@ -75,7 +94,9 @@ class ModbusDataCollector2000Delux:
         # data['/Ac/StatusCode'] = statuscode
 
         energy_forward = self.invSun2000.read(registers.InverterEquipmentRegister.AccumulatedEnergyYield)
+        energy_daily_forward = self.invSun2000.read(registers.InverterEquipmentRegister.DailyEnergyYield)
         data['/Ac/Energy/Forward'] = energy_forward
+        data['/Ac/Energy/DailyForward'] = energy_daily_forward
         # There is no Modbus register for the phases
         data['/Ac/L1/Energy/Forward'] = round(energy_forward / 3.0, 2)
         data['/Ac/L2/Energy/Forward'] = round(energy_forward / 3.0, 2)
@@ -87,6 +108,7 @@ class ModbusDataCollector2000Delux:
         data['/Ac/L3/Frequency'] = freq
 
         cosphi = float(self.invSun2000.read((registers.InverterEquipmentRegister.PowerFactor)))
+        data['/Ac/CosPhi'] = cosphi
         data['/Ac/L1/Power'] = cosphi * float(data['/Ac/L1/Voltage']) * float(
             data['/Ac/L1/Current']) * self.power_correction_factor
         data['/Ac/L2/Power'] = cosphi * float(data['/Ac/L2/Voltage']) * float(
