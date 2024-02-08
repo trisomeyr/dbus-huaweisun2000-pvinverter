@@ -165,7 +165,7 @@ def main():
             '/Ac/Energy/DailyForward': {'initial': None, 'textformat': _kwh},
             #
             '/Ac/L1/Power': {'initial': 0, 'textformat': _w},
-            '/Ac/L1/CosPhi': {'initial': 0, 'textformat': _n},
+            '/Ac/CosPhi': {'initial': 0, 'textformat': _n},
             '/Ac/L1/Current': {'initial': 0, 'textformat': _a},
             '/Ac/L1/Voltage': {'initial': 0, 'textformat': _v},
             '/Ac/L1/Frequency': {'initial': None, 'textformat': _hz},
